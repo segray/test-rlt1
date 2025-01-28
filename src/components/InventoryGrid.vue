@@ -1,9 +1,22 @@
 <script lang="ts" setup>
+import InventoryItem from '@/components/InventoryItem.vue'
 </script>
 
 <template>
   <div class="container">
     <div class="grid">
+      <div class="cell">
+        <InventoryItem color="#7FAA65" class="item"></InventoryItem>
+        <div class="counter">10</div>
+      </div>
+      <div class="cell">
+        <InventoryItem color="#AA9765" class="item"></InventoryItem>
+        <div class="counter">10</div>
+      </div>
+      <div class="cell">
+        <InventoryItem color="#656CAA" class="item"></InventoryItem>
+        <div class="counter">10</div>
+      </div>
       <div v-for="i in 250" class="cell" :key="i">
         <div class="counter">{{ i }}</div>
       </div>
@@ -26,6 +39,11 @@
   margin-bottom: -1px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
+
+.item {
+  width: 60%;
+  height: 60%;
 }
 
 .cell {
