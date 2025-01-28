@@ -3,7 +3,7 @@ import InventoryItem from '@/components/InventoryItem.vue'
 </script>
 
 <template>
-  <div class="container">
+  <div class="container frame">
     <div class="grid">
       <div class="cell">
         <InventoryItem color="#7FAA65" class="item"></InventoryItem>
