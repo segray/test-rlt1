@@ -2,12 +2,16 @@
 import SkeletonLine from "@/components/SkeletonLine.vue";
 import ButtonClose from "@/components/ButtonClose.vue";
 
+const emits = defineEmits<{
+  (e: "close"): void;
+}>();
+
 // TODO: по идее тут скелетоны должны быть привязаны к инспектируемому элементу, пока оставил так
 </script>
 
 <template>
   <div class="right-menu">
-    <ButtonClose class="right-menu__close"></ButtonClose>
+    <ButtonClose class="right-menu__close" @click="emits('close')"></ButtonClose>
 
     <div class="right-menu__image">
       <slot name="item"></slot>

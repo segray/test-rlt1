@@ -159,7 +159,7 @@ const dragEvents = {
       class="inventory__right-menu"
       :class="{ 'inventory__right-menu--hidden': !rightMenuComponent }"
     >
-      <RightMenu v-if="rightMenuComponent">
+      <RightMenu v-if="rightMenuComponent" @close="rightMenuComponent = undefined">
         <template #item>
           <component
             :is="AVAILABLE_ITEMS[rightMenuComponent.name]"
