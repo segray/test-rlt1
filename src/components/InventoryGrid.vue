@@ -86,7 +86,7 @@ const dragEvents = {
       c.classList.remove("inventory__cell--drag-over");
     });
 
-    // деволтное поведение браузера, если попали не туда
+    // дефолтное поведение браузера, если попали не туда
     if (!inventoryStore.canMoveItem(dragIndex.value, getCellIndex(cell))) {
       return;
     }
@@ -184,22 +184,20 @@ const dragEvents = {
 .inventory-container {
   position: relative;
 
-  background: #262626;
+  background: var(--background-color-secondary);
   border-radius: 12px;
-  border: 1px solid #4d4d4d;
+  border: 1px solid var(--border-color);
 
   overflow: hidden;
-  overflow-y: auto;
-  scrollbar-width: thin;
   max-height: 500px;
 }
 
 .inventory {
-  width: 100%;
-  margin-right: -1px;
-  margin-bottom: -1px;
+  width: calc(100% + 1px);
+  height: calc(100% + 1px);
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
 }
 
 .inventory__item {
@@ -209,9 +207,8 @@ const dragEvents = {
 
 .inventory__cell {
   position: relative;
-  aspect-ratio: 1;
 
-  border: 1px solid #4d4d4d;
+  border: 1px solid var(--border-color);
   border-top: none;
   border-left: none;
 
@@ -225,8 +222,7 @@ const dragEvents = {
 }
 
 .inventory__counter {
-  font-family: Inter, sans-serif;
-  color: white;
+  color: var(--color-primary);
   font-size: 10px;
 
   position: absolute;
@@ -236,7 +232,7 @@ const dragEvents = {
   right: -1px;
 
   border-top-left-radius: 6px;
-  border: 1px solid #4d4d4d;
+  border: 1px solid var(--border-color);
 
   display: flex;
   justify-content: center;

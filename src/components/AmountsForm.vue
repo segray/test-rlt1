@@ -66,4 +66,12 @@ defineExpose({
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.embedded-form__cancel {
+  flex: 2;
+}
+
+.embedded-form__confirm {
+  flex: 3;
+}
+</style>

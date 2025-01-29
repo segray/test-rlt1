@@ -1,7 +1,16 @@
-@import './base.css';
+@import './theme.css';
 @import './embedded-form.css';
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  font-weight: normal;
+}
+
 body {
+  font-family: Inter, sans-serif;
   font-size: 14px;
   background-color: var(--background-color-primary)
 }

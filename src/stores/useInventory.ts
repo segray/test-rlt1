@@ -26,6 +26,7 @@ export const useInventoryStore = defineStore("inventory", () => {
 
   const canMoveItem = (from: number, to: number) => {
     return (
+      from !== to &&
       data.value[from] &&
       (!data.value[to] ||
         JSON.stringify(data.value[from].component) === JSON.stringify(data.value[to].component))
