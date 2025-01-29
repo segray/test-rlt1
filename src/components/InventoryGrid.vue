@@ -8,13 +8,18 @@ import { AVAILABLE_ITEMS } from "@/types/TInventoryItem";
 
 const inventoryStore = useInventoryStore();
 
+// индексы ячеек, участвующие в транзакции
 const dragIndex = ref<number>();
+// TODO: форма с переносом открывается на dropIndex !== undefined, пока есть неконсистентность в состояниях
 const dropIndex = ref<number>();
 
+// текущий компонент в правом меню
 const rightMenuComponent = ref<TInventoryItem>();
 
+// v-model инпута из формы ввода количества
 const amountInput = ref<string>();
 
+// callback функция для валидации формы
 const amountValidate = (input: string) => {
   const number = Number(input);
   return !!(
@@ -24,6 +29,7 @@ const amountValidate = (input: string) => {
   );
 };
 
+// callback для @confirm формы
 const moveConfirm = (input: string) => {
   const number = Number(input);
   if (dragIndex.value !== undefined && dropIndex.value !== undefined && number) {
@@ -33,13 +39,16 @@ const moveConfirm = (input: string) => {
   moveCancel();
 };
 
+// callback для @cancel формы
 const moveCancel = () => {
   rightMenuComponent.value = undefined;
   dropIndex.value = undefined;
 };
 
-const cellSelector = ".inventory-cell";
-const itemSelector = ".inventory-grid__item";
+
+// тут дальше будет грязь с легаси драг-н-дропом ----------------------
+const cellSelector = ".inventory__cell";
+const itemSelector = ".inventory__item";
 
 const matchTarget = (event: MouseEvent, selector: string) => {
   const target = event.target as HTMLElement;
@@ -59,10 +68,11 @@ const dragEvents = {
       return;
     }
 
+    // запомнили схваченый итем
     dragIndex.value = getCellIndex(target);
 
     event.dataTransfer!.setData("text/app-inventory", dragIndex.value.toString());
-    event.dataTransfer!.effectAllowed = "move";
+    event.dataTransfer!.effectAllowed = "move"; // TODO: должно изменить курсор. не меняет
   },
 
   dragenter: (event: DragEvent) => {
@@ -71,17 +81,19 @@ const dragEvents = {
       return;
     }
 
+    // отменяем все стили для дроп таргетов
     cell.parentNode?.querySelectorAll(cellSelector).forEach((c) => {
-      c.classList.remove("inventory-cell--drag-over");
+      c.classList.remove("inventory__cell--drag-over");
     });
 
+    // деволтное поведение браузера, если попали не туда
     if (!inventoryStore.canMoveItem(dragIndex.value, getCellIndex(cell))) {
       return;
     }
 
     event.preventDefault();
 
-    cell.classList.add("inventory-cell--drag-over");
+    cell.classList.add("inventory__cell--drag-over");
     event.dataTransfer!.dropEffect = "move";
   },
 
@@ -103,9 +115,12 @@ const dragEvents = {
 
     event.preventDefault();
 
+    // запомнили индекс дроп таргета
     dropIndex.value = cellIndex;
 
     const data = inventoryStore.data[dragIndex.value!]!;
+
+    // показ левого меню с формой для ввода количества
     amountInput.value = "" + data.count;
     rightMenuComponent.value = data.component;
   },
@@ -116,32 +131,33 @@ const dragEvents = {
       return;
     }
 
+    // если бросили элемент за пределами грида
     cell.parentNode?.querySelectorAll(cellSelector).forEach((c) => {
-      c.classList.remove("inventory-cell--drag-over");
+      c.classList.remove("inventory__cell--drag-over");
     });
   },
 };
 </script>
 
 <template>
-  <div class="container frame" v-on="dragEvents">
-    <div class="grid">
-      <div v-for="(_, i) in 25" class="inventory-cell" :key="inventoryStore.key(i)" :data-index="i">
+  <div class="inventory-container frame" v-on="dragEvents">
+    <div class="inventory">
+      <div v-for="(_, i) in 25" class="inventory__cell" :key="inventoryStore.key(i)" :data-index="i">
         <template v-if="inventoryStore.data[i]">
           <component
             :is="AVAILABLE_ITEMS[inventoryStore.data[i].component.name]"
             :="inventoryStore.data[i].component.attrs"
             :data-index="i"
             draggable="true"
-            class="inventory-grid__item"
+            class="inventory__item"
           ></component>
-          <div class="counter">{{ inventoryStore.data[i].count }}</div>
+          <div class="inventory__counter">{{ inventoryStore.data[i].count }}</div>
         </template>
       </div>
     </div>
     <div
-      class="inventory-grid-right-menu"
-      :class="{ 'inventory-grid-right-menu--hidden': !rightMenuComponent }"
+      class="inventory__right-menu"
+      :class="{ 'inventory__right-menu--hidden': !rightMenuComponent }"
     >
       <RightMenu v-if="rightMenuComponent">
         <template #item>
@@ -165,7 +181,7 @@ const dragEvents = {
 </template>
 
 <style scoped>
-.container {
+.inventory-container {
   position: relative;
 
   background: #262626;
@@ -178,7 +194,7 @@ const dragEvents = {
   max-height: 500px;
 }
 
-.grid {
+.inventory {
   width: 100%;
   margin-right: -1px;
   margin-bottom: -1px;
@@ -186,12 +202,12 @@ const dragEvents = {
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
 
-.inventory-grid__item {
+.inventory__item {
   width: 60%;
   height: 60%;
 }
 
-.inventory-cell {
+.inventory__cell {
   position: relative;
   aspect-ratio: 1;
 
@@ -204,12 +220,11 @@ const dragEvents = {
   align-items: center;
 }
 
-.inventory-cell--drag-over {
+.inventory__cell--drag-over {
   background-color: hsl(from var(--background-color-secondary) h s 20%);
 }
 
-/* counter */
-.counter {
+.inventory__counter {
   font-family: Inter, sans-serif;
   color: white;
   font-size: 10px;
@@ -230,14 +245,14 @@ const dragEvents = {
   pointer-events: none;
 }
 
-.inventory-grid-right-menu {
+.inventory__right-menu {
   position: absolute;
   top: -1px;
   right: -1px;
   transition: transform 0.3s ease;
 }
 
-.inventory-grid-right-menu--hidden {
+.inventory__right-menu--hidden {
   transform: translateX(101%);
 }
 </style>

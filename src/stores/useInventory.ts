@@ -17,6 +17,7 @@ const initialState: TInventorySlot[] = [
 ];
 
 export const useInventoryStore = defineStore("inventory", () => {
+  // стейт состоит из массива, где часть элементов может быть пропущена (undefined)
   const data = useStorage<TInventorySlot[]>("inventory", []);
 
   if (data.value.length === 0) {
@@ -66,6 +67,7 @@ export const useInventoryStore = defineStore("inventory", () => {
     }
   };
 
+  // ключ для v-for в шаблонах
   const key = (index: number) => {
     return data.value[index] ? JSON.stringify(data.value[index]) : index;
   };

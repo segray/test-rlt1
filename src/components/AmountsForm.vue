@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, useTemplateRef } from "vue";
 
+// Форма ввода количества элементов
+// Форма встраиватся в меню. Могут быть другие формы и точки монтирования
+
 const props = withDefaults(
   defineProps<{
     validate?: (input: string) => boolean;
@@ -34,6 +37,7 @@ const inputRef = useTemplateRef("input-ref");
 onMounted(() => {
   setTimeout(() => {
     inputRef.value?.focus();
+    // TODO: без таймаута будет дребезжание интерфейса
   }, 400);
 });
 

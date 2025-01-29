@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import SkeletonLine from "@/components/SkeletonLine.vue";
 import ButtonClose from "@/components/ButtonClose.vue";
+
+// TODO: по идее тут скелетоны должны быть привязаны к инспектируемому элементу, пока оставил так
 </script>
 
 <template>

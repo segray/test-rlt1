@@ -2,6 +2,7 @@
 const props = defineProps<{
   width?: number
 }>();
+// TODO: тут хотел сделать привязку к lorem upsum строкам, но в макете размеры и положения скелетонов слишком хаотичны
 </script>
 
 <template>
