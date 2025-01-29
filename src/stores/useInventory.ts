@@ -22,8 +22,8 @@ export const useInventoryStore = defineStore("inventory", () => {
 
   const canMoveItem = (from: number, to: number) => {
     return (
-      data.value[from] !== undefined &&
-      (data.value[to] === undefined || data.value[from].color === data.value[to].color)
+      data.value[from] &&
+      (!data.value[to] || data.value[from].color === data.value[to].color)
     );
   };
 
