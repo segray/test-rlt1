@@ -1,28 +1,25 @@
 <script lang="ts" setup>
-import InventoryItem from '@/components/InventoryItem.vue'
-import RightMenu from './RightMenu.vue';
+import InventoryItem from "@/components/InventoryItem.vue";
+import RightMenu from "./RightMenu.vue";
+import { useInventoryStore } from "@/stores/useInventory";
+
+const inventoryStore = useInventoryStore();
 </script>
 
 <template>
   <div class="container frame">
     <div class="grid">
-      <div class="cell">
-        <InventoryItem color="#7FAA65" class="item"></InventoryItem>
-        <div class="counter">10</div>
-      </div>
-      <div class="cell">
-        <InventoryItem color="#AA9765" class="item"></InventoryItem>
-        <div class="counter">10</div>
-      </div>
-      <div class="cell">
-        <InventoryItem color="#656CAA" class="item"></InventoryItem>
-        <div class="counter">10</div>
-      </div>
-      <div v-for="i in 250" class="cell" :key="i">
-        <div class="counter">{{ i }}</div>
+      <div v-for="(_, i) in 25" class="cell" :key="inventoryStore.key(i)">
+        <template v-if="inventoryStore.data[i]">
+          <InventoryItem
+            :color="inventoryStore.data[i].color"
+            class="inventory-grid__item"
+          ></InventoryItem>
+          <div class="counter">{{ inventoryStore.data[i].count }}</div>
+        </template>
       </div>
     </div>
-    <div class="inventory-grid-right-menu">
+    <div class="inventory-grid-right-menu inventory-grid-right-menu--hidden">
       <RightMenu></RightMenu>
     </div>
   </div>
@@ -34,7 +31,7 @@ import RightMenu from './RightMenu.vue';
 
   background: #262626;
   border-radius: 12px;
-  border: 1px solid #4D4D4D;
+  border: 1px solid #4d4d4d;
 
   overflow: hidden;
   overflow-y: auto;
@@ -50,7 +47,7 @@ import RightMenu from './RightMenu.vue';
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
 
-.item {
+.inventory-grid__item {
   width: 60%;
   height: 60%;
 }
@@ -59,7 +56,7 @@ import RightMenu from './RightMenu.vue';
   position: relative;
   aspect-ratio: 1;
 
-  border: 1px solid #4D4D4D;
+  border: 1px solid #4d4d4d;
   border-top: none;
   border-left: none;
 
@@ -81,7 +78,7 @@ import RightMenu from './RightMenu.vue';
   right: -1px;
 
   border-top-left-radius: 6px;
-  border: 1px solid #4D4D4D;
+  border: 1px solid #4d4d4d;
 
   display: flex;
   justify-content: center;
@@ -98,5 +95,4 @@ import RightMenu from './RightMenu.vue';
 .inventory-grid-right-menu--hidden {
   transform: translateX(101%);
 }
-
 </style>
