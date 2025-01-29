@@ -1,4 +1,5 @@
 @import './base.css';
+@import './embedded-form.css';
 
 body {
   font-size: 14px;

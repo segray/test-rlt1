@@ -6,7 +6,6 @@ import BottomMenu from '@/components/BottomMenu.vue'
 
 <template>
   <main>
-    190
     <div class="content">
       <div class="row">
         <LeftMenu></LeftMenu>

@@ -1,12 +1,10 @@
 <script setup lang="ts">
-// import defineProps from 'vue';
-const props = defineProps<{
-  color: string
-}>();
+// тут намеренно не типизируем, потому - что могут прийти любые данные
+const props = defineProps(["color"]);
 </script>
 
 <template>
-  <div class="item" :style="{'--inventory-item-color': props.color}"></div>
+  <div class="item" :style="{ '--inventory-item-color': props.color }"></div>
 </template>
 
 <style scoped>
@@ -14,8 +12,9 @@ const props = defineProps<{
   position: relative;
 }
 
-.item::before, .item::after {
-  content: '';
+.item::before,
+.item::after {
+  content: "";
   width: 85%;
   height: 85%;
   position: absolute;

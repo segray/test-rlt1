@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import SkeletonLine from "@/components/SkeletonLine.vue";
-import InventoryItem from "@/components/InventoryItem.vue";
 import ButtonClose from "@/components/ButtonClose.vue";
 </script>
 
@@ -8,7 +7,10 @@ import ButtonClose from "@/components/ButtonClose.vue";
   <div class="right-menu">
     <ButtonClose class="right-menu__close"></ButtonClose>
 
-    <component :is="InventoryItem" class="right-menu__image" color="#7FAA65"></component>
+    <div class="right-menu__image">
+      <slot name="item"></slot>
+    </div>
+
     <SkeletonLine class="right-menu__divider" :width="220"></SkeletonLine>
 
     <SkeletonLine class="right-menu__title" :width="211"></SkeletonLine>
@@ -24,15 +26,7 @@ import ButtonClose from "@/components/ButtonClose.vue";
     <SkeletonLine class="right-menu__divider" :width="220"></SkeletonLine>
 
     <div class="right-menu__embedded">
-      <slot>
-        <div class="embedded-form">
-          <input type="text" placeholder="Введите количество" inputmode="numeric" />
-          <div class="embedded-form__buttons">
-            <button class="embedded-form__cancel">Отмена</button>
-            <button class="embedded-form__confirm">Подтвердить</button>
-          </div>
-        </div>
-      </slot>
+      <slot name="form"></slot>
     </div>
   </div>
 </template>
@@ -55,7 +49,7 @@ import ButtonClose from "@/components/ButtonClose.vue";
   justify-content: start;
 }
 
-.right-menu__image {
+.right-menu__image > * {
   width: 130px;
   height: 130px;
   margin: 55px 60px;
@@ -90,49 +84,5 @@ import ButtonClose from "@/components/ButtonClose.vue";
   position: absolute;
   bottom: 0;
   width: 100%;
-}
-
-.embedded-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.embedded-form__buttons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.embedded-form input {
-  width: 100%;
-  border: 1px solid var(--border-color);
-  background-color: var(--background-color-secondary);
-  height: 40px;
-  border-radius: 4px;
-  padding: 12px;
-
-  margin-bottom: 20px;
-}
-
-.embedded-form__buttons button {
-  width: 100%;
-  height: 33px;
-  border-radius: 8px;
-  border: none;
-  outline: none;
-}
-
-.embedded-form__cancel {
-  flex: 2;
-  background-color: #FFFFFF;
-  color: #2D2D2D;
-}
-
-.embedded-form__confirm {
-  flex: 3;
-  background-color: #FA7272;
-  color: #FFFFFF;
 }
 </style>

@@ -1,12 +1,42 @@
 <script lang="ts" setup>
-import InventoryItem from "@/components/InventoryItem.vue";
 import RightMenu from "./RightMenu.vue";
+import AmountsForm from "./AmountsForm.vue";
 import { useInventoryStore } from "@/stores/useInventory";
 import { ref } from "vue";
+import type { TInventoryItem } from "@/types/TInventoryItem";
+import { AVAILABLE_ITEMS } from "@/types/TInventoryItem";
 
 const inventoryStore = useInventoryStore();
 
 const dragIndex = ref<number>();
+const dropIndex = ref<number>();
+
+const rightMenuComponent = ref<TInventoryItem>();
+
+const amountInput = ref<string>();
+
+const amountValidate = (input: string) => {
+  const number = Number(input);
+  return !!(
+    dragIndex.value !== undefined &&
+    number &&
+    (inventoryStore.data[dragIndex.value]?.count ?? 0) >= number
+  );
+};
+
+const moveConfirm = (input: string) => {
+  const number = Number(input);
+  if (dragIndex.value !== undefined && dropIndex.value !== undefined && number) {
+    inventoryStore.moveItem(dragIndex.value, dropIndex.value, number);
+  }
+
+  moveCancel();
+};
+
+const moveCancel = () => {
+  rightMenuComponent.value = undefined;
+  dropIndex.value = undefined;
+};
 
 const cellSelector = ".inventory-cell";
 const itemSelector = ".inventory-grid__item";
@@ -37,10 +67,7 @@ const dragEvents = {
 
   dragenter: (event: DragEvent) => {
     const cell = matchTarget(event, cellSelector);
-    if (
-      !cell ||
-      dragIndex.value === undefined
-    ) {
+    if (!cell || dragIndex.value === undefined) {
       return;
     }
 
@@ -75,7 +102,12 @@ const dragEvents = {
     }
 
     event.preventDefault();
-    inventoryStore.moveItem(dragIndex.value!, getCellIndex(cell), 1);
+
+    dropIndex.value = cellIndex;
+
+    const data = inventoryStore.data[dragIndex.value!]!;
+    amountInput.value = "" + data.count;
+    rightMenuComponent.value = data.component;
   },
 
   dragend: (event: DragEvent) => {
@@ -96,18 +128,38 @@ const dragEvents = {
     <div class="grid">
       <div v-for="(_, i) in 25" class="inventory-cell" :key="inventoryStore.key(i)" :data-index="i">
         <template v-if="inventoryStore.data[i]">
-          <InventoryItem
-            :color="inventoryStore.data[i].color"
+          <component
+            :is="AVAILABLE_ITEMS[inventoryStore.data[i].component.name]"
+            :="inventoryStore.data[i].component.attrs"
             :data-index="i"
             draggable="true"
             class="inventory-grid__item"
-          ></InventoryItem>
+          ></component>
           <div class="counter">{{ inventoryStore.data[i].count }}</div>
         </template>
       </div>
     </div>
-    <div class="inventory-grid-right-menu inventory-grid-right-menu--hidden">
-      <RightMenu></RightMenu>
+    <div
+      class="inventory-grid-right-menu"
+      :class="{ 'inventory-grid-right-menu--hidden': !rightMenuComponent }"
+    >
+      <RightMenu v-if="rightMenuComponent">
+        <template #item>
+          <component
+            :is="AVAILABLE_ITEMS[rightMenuComponent.name]"
+            :="rightMenuComponent.attrs"
+          ></component>
+        </template>
+        <template #form v-if="dropIndex !== undefined">
+          <AmountsForm
+            :validate="amountValidate"
+            @confirm="moveConfirm"
+            @cancel="moveCancel"
+            v-model="amountInput"
+          >
+          </AmountsForm>
+        </template>
+      </RightMenu>
     </div>
   </div>
 </template>
