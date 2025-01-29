@@ -1,22 +1,47 @@
 <script setup lang="ts">
 import InventoryGrid from '@/components/InventoryGrid.vue'
-import SkeletonLine from '@/components/SkeletonLine.vue'
-import SkeletonImage from '@/components/SkeletonImage.vue'
+import LeftMenu from '@/components/LeftMenu.vue'
+import BottomMenu from '@/components/BottomMenu.vue'
 </script>
 
 <template>
   <main>
-    <InventoryGrid />
-    <h1><SkeletonLine>Lorem ipsum dolor</SkeletonLine></h1>
-    <p><SkeletonLine>Lorem ipsum dolor sit amet, consectetur</SkeletonLine></p>
-    <p><SkeletonLine>adipiscing elit, sed do eiusmod tempor incididunt ut</SkeletonLine></p>
-
-    <SkeletonImage></SkeletonImage>
+    190
+    <div class="content">
+      <div class="row">
+        <LeftMenu></LeftMenu>
+        <InventoryGrid class="app-grid" />
+      </div>
+      <div class="row">
+        <BottomMenu class="app-bottom-menu"></BottomMenu>
+      </div>
+    </div>
   </main>
 </template>
 
 <style scoped>
 main {
   padding: 100px;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 780px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.app-grid {
+  width: 525px;
+}
+
+.app-bottom-menu {
+  width: 100%;
 }
 </style>
